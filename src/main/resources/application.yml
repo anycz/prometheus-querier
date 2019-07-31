@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: prometheus-querier
+api.port: 8080
+okhttp:
+  connection:
+    maxIdleConnections: 0
