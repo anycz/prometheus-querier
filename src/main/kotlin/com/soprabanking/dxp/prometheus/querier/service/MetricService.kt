@@ -44,7 +44,7 @@ class MetricService(private val client: PrometheusClient) {
             .map { toFloatOrZero(it) }
             .map { it * 1000 } // retrieve duration in milliseconds, 0 is time of measure, rest is empty
             .collectList()
-            .map { it.average() }
+            .map { if (it.size > 0) it.average() else 0.0 }
 
     private fun toFloatOrZero(it: List<String>) = if (it[1] != "Nan") it[1].toFloat() else 0f
 
@@ -72,7 +72,7 @@ class MetricService(private val client: PrometheusClient) {
             .map { toFloatOrZero(it) }
             .map { it * 100 } // retrieve duration in milliseconds, 0 is time of measure, rest is empty
             .collectList()
-            .map { it.average() }
+            .map { if (it.size > 0) it.average() else 0.0 }
 
     /**
      * @param microservice deployment name
@@ -97,7 +97,7 @@ class MetricService(private val client: PrometheusClient) {
             .flatMapIterable { it }
             .map { toFloatOrZero(it) } // retrieve duration in milliseconds, 0 is time of measure, rest is empty
             .collectList()
-            .map { it.average() }
+            .map { if (it.size > 0) it.average() else 0.0 }
 
     /**
      * @param microservice deployment name
@@ -122,5 +122,5 @@ class MetricService(private val client: PrometheusClient) {
             .flatMapIterable { it }
             .map { toFloatOrZero(it) } // retrieve duration in milliseconds, 0 is time of measure, rest is empty
             .collectList()
-            .map { it.average() }
+            .map { if (it.size > 0) it.average() else 0.0 }
 }
