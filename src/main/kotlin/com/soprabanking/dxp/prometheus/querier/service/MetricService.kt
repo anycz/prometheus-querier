@@ -113,7 +113,7 @@ class MetricService(private val client: PrometheusClient) {
             step: Int,
             namespace: String = "psd2"
     ) = client.queryRange(
-            "sum (rate (container_cpu_usage_seconds_total{image!=\"\",name=~\"^k8s_.*\", namespace=\"psd2\", pod_name=~\"^$microservice.*\"}[1m])) by (pod_name)",
+            "sum (rate (container_cpu_usage_seconds_total{image!=\"\",name=~\"^k8s_.*\", namespace=\"$namespace\", pod_name=~\"^$microservice.*\"}[1m])) by (pod_name)",
             start, end, step
     )
             .map { it.data.result }
