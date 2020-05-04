@@ -1,5 +1,6 @@
 package com.soprabanking.dxp.prometheus.querier.resource
 
+import com.soprabanking.dxp.commons.constants.logger
 import com.soprabanking.dxp.prometheus.model.api.MeasureDTO
 import com.soprabanking.dxp.prometheus.querier.client.PrometheusClient
 import com.soprabanking.dxp.prometheus.querier.service.MetricService
@@ -31,7 +32,7 @@ class PromResource(private val client: PrometheusClient, private val service: Me
         return service.findServices(start, namespace)
                 .filter { !listOf("busybox", "sleep", "ui-backoffice").contains(it) }
                 .flatMap { it.toMeasure(start, namespace) }
-                .sort(Comparator<MeasureDTO> { a, b -> if (a.msName == "server-proxy") 1 else if (b.msName == "server-proxy") -1 else 0 }
+                .sort(Comparator<MeasureDTO> { a, b -> if (a.msName.startsWith("server-proxy")) 1 else if (b.msName.startsWith("server-proxy")) -1 else 0 }
                               .then(compareBy { it.msName }))
                 .map {
                     "|${it.msName}|${it.cpu.round(3)}|2|${it.ops.round(1)}|${it.p50ms.roundToLong()}|${it.p90ms.roundToLong()}|${it.p99ms.roundToLong()}|${it.successPercent.round(
